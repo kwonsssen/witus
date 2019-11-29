@@ -1,0 +1,238 @@
+{% extends 'first/base.html' %}
+{% load static %}
+
+{% block head %}
+	<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+	<style type="text/css">
+		.cal_top{
+		    text-align: center;
+		    font-size: 30px;
+		}
+		.cal{
+		    text-align: center; 
+		}
+		table.calendar{
+		    display: inline-table;
+		    text-align: left;
+		}
+		table.calendar td{
+		    vertical-align: top;
+		    width: 100px;
+		}
+	</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="container-table100">
+	<div class="col-12 cal_top" style="margin-top: 10%;">
+        <a style="color:black;text-decoration:none" href="#" id="movePrevMonth"><span id="prevMonth" class="cal_tit">&lt;&emsp;</span></a>
+        <span id="cal_top_year"></span>
+        <span id="cal_top_month"></span>
+        <a style="color:black;text-decoration:none" href="#" id="moveNextMonth"><span id="nextMonth" class="cal_tit">&emsp;&gt;</span></a>
+    </div>
+	<div class="wrap-table100">
+		<div id="cal_tab" class="table100 ver5 m-b-110">
+		</div>
+	</div>
+</div>
+
+
+	
+
+
+<!--모달 내용-->
+{% for i in basket_jiwon_list %}
+<div class="modal fade" id="modal{{i.pk}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 id="modal_title" class="modal-title" id="exampleModalScrollableTitle">{{ i.basket_team_name }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+		<p>manager : {{i.manager}}</p>
+		<p>area : {{i.area}} {{i.area_detail}}</p>
+		<p>date_time : {{i.date_time}}</p>
+		<p>discription : {{i.discription}}</p>
+		<p>{{i.people_count}} / {{i.max_people}}</p>
+		{% if user.is_authenticated and i.manager != user %}
+		<form action="{% url 'team_cancel' %}" method="post" enctype="multipart/form-data" class="">
+            {% csrf_token %}
+            <input type="hidden" name="url" value="{{ request.path }}">
+            <button type="submit" class="btn btn-primary" name="jiwon_cancel" value="{{ i.pk }}">
+              팀 탈퇴
+            </button>
+		</form>
+		{% endif %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+ 
+<script type="text/javascript">
+    
+    var today = null;
+    var year = null;
+    var month = null;
+    var firstDay = null;
+    var lastDay = null;
+    var $tdDay = null;
+    var $tdSche = null;
+    var date_list = new Array();
+
+
+    $(document).ready(function() {
+    	list_ajax();
+        drawCalendar();
+        initDate();
+        drawDays();
+        drawSche();
+        $("#movePrevMonth").on("click", function(){movePrevMonth();});
+        $("#moveNextMonth").on("click", function(){moveNextMonth();});
+    });
+
+
+    function list_ajax(){
+    	$.ajax({ // .like 버튼을 클릭하면 <새로고침> 없이 ajax로 서버와 통신하겠다.
+   		   type: "POST", // 데이터를 전송하는 방법을 지정
+   		   url: "/my_page_shinchung_list_ajax", // 통신할 url을 지정
+   		   data: {'csrfmiddlewaretoken': '{{ csrf_token }}'}, // 서버로 데이터 전송시 옵션
+   		   dataType: "json", // 서버측에서 전송한 데이터를 어떤 형식의 데이터로서 해석할 것인가를 지정, 없으면 알아서 판단
+   		   // 서버측에서 전송한 Response 데이터 형식 (json)
+   		   success: function(response){ // 통신 성공시 - 동적으로 좋아요 갯수 변경, 유저 목록 변경
+   		     var year_tmp = String(response['jiwon_list'][0].split('/')[0]);
+   		     var month_tmp = String(response['jiwon_list'][0].split('/')[1]);
+   		     var day_tmp = String(response['jiwon_list'][0].split('/')[1]);
+
+
+   		     // 지원한 팀들의 날짜들 등록
+   		     for (var i = 0; i < response['jiwon_list'].length; i++) {
+  				date_list.push(response['jiwon_list'][i]);
+			 }
+
+   		 	},
+   		     
+   		     
+   		   error: function(request, status, error){ // 통신 실패시
+   		     alert("ajax통신이 실패했습니다.")
+
+   		   },
+   		});
+    }
+    
+    //Calendar 그리기
+    function drawCalendar(){
+        var setTableHTML = "";
+        setTableHTML+='<table class="calendar" data-vertable="ver5">';
+        setTableHTML+='<thead><tr class="row100 head"><th>SUN</th><th>MON</th><th>TUE</th><th>WED</th><th>THU</th><th>FRI</th><th>SAT</th></tr></thead><tbody>';
+        for(var i=0;i<6;i++){
+            setTableHTML+='<tr class="row100">';
+            for(var j=0;j<7;j++){
+                setTableHTML+='<td column100" data-column="column2">';
+                setTableHTML+='    <div class="cal-day"></div>';
+                setTableHTML+='    <div class="cal-schedule"></div>';
+                setTableHTML+='</td>';
+            }
+            setTableHTML+='</tr>';
+        }
+        setTableHTML+='</tbody></table>';
+        $("#cal_tab").html(setTableHTML);
+    }
+    
+    //날짜 초기화
+    function initDate(){
+        $tdDay = $("td div.cal-day")
+        $tdSche = $("td div.cal-schedule")
+        dayCount = 0;
+        today = new Date();
+        year = today.getFullYear();
+        month = today.getMonth()+1;
+        if(month < 10){month = "0"+month;}
+        firstDay = new Date(year,month-1,1);
+        lastDay = new Date(year,month,0);
+    }
+    
+    //calendar 날짜표시
+    function drawDays(){
+        $("#cal_top_year").text(year);
+        $("#cal_top_month").text(month);
+        for(var i=firstDay.getDay();i<firstDay.getDay()+lastDay.getDate();i++){
+            $tdDay.eq(i).text(++dayCount);
+        }
+        for(var i=0;i<42;i+=7){
+            $tdDay.eq(i).css("color","red");
+        }
+        for(var i=6;i<42;i+=7){
+            $tdDay.eq(i).css("color","blue");
+        }
+    }
+    
+    //calendar 월 이동
+    function movePrevMonth(){
+        month--;
+        if(month<=0){
+            month=12;
+            year--;
+        }
+        if(month<10){
+            month=String("0"+month);
+        }
+        getNewInfo();
+        }
+    
+    function moveNextMonth(){
+        month++;
+        if(month>12){
+            month=1;
+            year++;
+        }
+        if(month<10){
+            month=String("0"+month);
+        }
+        getNewInfo();
+    }
+    
+    //정보갱신
+    function getNewInfo(){
+        for(var i=0;i<42;i++){
+            $tdDay.eq(i).text("");
+            $tdSche.eq(i).text("");
+        }
+        dayCount=0;
+        firstDay = new Date(year,month-1,1);
+        lastDay = new Date(year,month,0);
+        drawDays();
+        drawSche();
+    }
+
+
+
+    
+    //스케줄 그리기
+    function drawSche(){
+        for(var i=0;i<date_list.length;i+=5){    
+            if(date_list[i]==year){
+        		if(date_list[i+1]==month){
+	        		$tdSche.eq(firstDay.getDay() + Number(date_list[i+2])-1).html('<a style="cursor:pointer" data-toggle="modal" data-target="#modal'+date_list[i+4]+'">'+date_list[i+3]+'</a>');
+        		}	
+        	}
+
+        }
+
+        
+    }
+    
+
+
+ 
+</script>
+{% endblock %}

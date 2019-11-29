@@ -1,0 +1,642 @@
+
+{% extends 'first/base.html' %}
+
+{% load static %}
+
+{% block head %}
+{% endblock %}
+
+
+{% block content %}
+    
+
+    <!-- MENU ================================================== --> 
+    <section class="section bg-light">
+
+      <!-- Triangles -->
+      <div class="bg-triangle bg-triangle-dark bg-triangle-top bg-triangle-left"></div>
+      <div class="bg-triangle bg-triangle-dark bg-triangle-bottom bg-triangle-right"></div>
+
+      <!-- Content -->
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-12 col-md-8 col-lg-6">
+
+            <!-- Heading -->
+            <h2 class="mb-4 text-center">
+              Sport map       
+            </h2>
+
+            <!-- Subheading -->
+            <p class="mb-5 text-center text-muted">
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Excepturi asperiores beatae quae inventore, molestiae dolorum.
+            </p>
+
+          </div>
+        </div> <!-- / .row --> 
+        <div class="row">
+          <div class="col-12">
+            
+            <!-- Nav -->
+            <nav class="nav nav-pills justify-content-center mb-6">
+              <a id="place_basket" href="#menuOne" class="nav-link active" data-toggle="tab">
+                농구장
+              </a>
+              <a id="place_soccer" href="#menuTwo" class="nav-link" data-toggle="tab">
+                축구장
+              </a>
+              <a id="place_foot" href="#menuThree" class="nav-link" data-toggle="tab">
+                족구장
+              </a>
+            </nav>
+
+          </div>
+          <div id="map" class="col-12" style="height:35rem;"></div>
+        </div> <!-- / .row -->
+      </div> <!-- / .container -->
+    </section>
+
+
+<!-- 모달, modal -->
+<!-- Button trigger modal -->
+<button id="modal_button" style="display:none;" type="button" class="btn btn-primary" data-toggle="modal" data-target="#tmp" value="{% url 'sportmap' %}"></button>
+<p id="basket_hidden" style="display:none;">{% for i in place_list %}{{ i.title }}|{{ i.x_coor }}|{{ i.y_coor }}|{% endfor %}</p>
+<p id="soccer_hidden" style="display:none;">{% for i in soccer_place_list %}{{ i.title }}|{{ i.x_coor }}|{{ i.y_coor }}|{% endfor %}</p>
+<p id="foot_hidden" style="display:none;">{% for i in foot_place_list %}{{ i.title }}|{{ i.x_coor }}|{{ i.y_coor }}|{% endfor %}</p>
+
+
+{% for i in place_list %}
+  <!-- Modal -->
+<div class="modal fade" id="{{ i.title|striptags|cut:" " }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 id="modal_title" class="modal-title" id="exampleModalScrollableTitle">{{ i.title }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div class="col-12 col-md-12 order-md-1">
+            
+            <!-- Image -->
+            <img src="/media/{{ i.photo }}" alt="" class="img-fluid mb-5">
+
+            <!-- Nav -->
+            <nav class="nav nav-tabs mb-5">
+              <a href="#{{ i.title|striptags|cut:" " }}itemDescription" class="nav-item nav-link active" data-toggle="tab">
+                소개                  
+              </a>
+              <a href="#{{ i.title|striptags|cut:" " }}itemShipping" class="nav-item nav-link" data-toggle="tab">
+                아무거나
+              </a>
+              <a href="#{{ i.title|striptags|cut:" " }}itemReviews" class="nav-item nav-link" data-toggle="tab">
+                Reviews
+              </a>
+            </nav>
+
+            <!-- Content -->
+            <div class="tab-content">
+              <div class="tab-pane fade show active" id="{{ i.title|striptags|cut:" " }}itemDescription">
+                
+                <p class="text-sm">
+                  주소 : {{ i.address }}
+                </p>
+
+                <p class="text-sm">
+                  설명 : {{ i.description }}
+                </p>
+
+                <p class="mb-0 text-sm">
+                  평점 : {{ i.description }}
+                </p>
+
+              </div>
+
+              <div class="tab-pane fade" id="{{ i.title|striptags|cut:" " }}itemShipping">
+                
+                <p class="text-sm">
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta iure vero labore sed recusandae perferendis iste quam suscipit asperiores quo ab, beatae perspiciatis aut numquam mollitia rem nobis aliquam voluptas.
+                </p>
+
+                <p class="text-sm">
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. In repudiandae labore amet fuga architecto qui, eos nulla quam sed soluta error exercitationem non accusamus aliquam illum minima asperiores dolores cupiditate!
+                </p>
+
+                <p class="mb-0 text-sm">
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores distinctio facere adipisci beatae nobis amet aperiam eius eaque culpa modi, quia, maiores obcaecati voluptate! Ipsam architecto asperiores, enim debitis pariatur?
+                </p>
+
+              </div>
+
+              <div class="tab-pane fade" id="{{ i.title|striptags|cut:" " }}itemReviews">
+                {% if request.user.is_active %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            {{ form.text }}
+                        </div>
+                        <button type="submit" class="btn btn-primary" name="pk" value="{{ i.pk }}">댓글 작성</button>
+                    </form>
+                {% else %}
+                    <div class="alert alert-warning">로그인된 사용자만 댓글을 작성할 수 있습니다.</div>
+                {% endif %}
+                
+                {% for comment in comments %}
+                {% if comment.place.title == i.title %}
+                <!-- Comment -->
+                <div class="row no-gutters mb-0">
+                  <div class="col-auto">
+                    
+                    <!-- Avatar -->
+                    <div class="avatar mr-3">
+                      <img src="" alt="..." class="img-cover">
+                    </div>
+
+                  </div>
+                  
+                  
+                  <div class="col">
+                    <!-- Meta -->
+                    <p class="mb-1 text-muted text-xs">
+                      by <strong class="text-body">{{ comment.author.nickname }}</strong> {{ comment.created_date }}
+                    </p>
+                    <!-- Rating -->
+                    <p class="mb-2 text-xs text-primary">
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star-half"></i>
+                    </p>
+                    
+                    <!-- Text -->
+                    <p class="mb-0 text-sm">
+                          {{ comment }}                      
+                    </p>                  
+                  </div>
+                  
+                </div>
+                {% endif %}
+                {% endfor %}
+                <!-- Comment -->
+                <div class="row no-gutters mb-4">
+                  <div class="col-auto">
+                    
+                    <!-- Avatar -->
+                    <div class="avatar mr-3">
+                      <img src="assets/img/17.jpg" alt="..." class="img-cover">
+                    </div>
+
+                  </div>
+                  <div class="col">
+                    
+                    <!-- Meta -->
+                    <p class="mb-1 text-muted text-xs">
+                      by <strong class="text-body">Judy Doe</strong> 17 minutes ago
+                    </p>
+
+                    <!-- Rating -->
+                    <p class="mb-2 text-xs text-primary">
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                    </p>
+                    
+                    <!-- Text -->
+                    <p class="mb-0 text-sm">
+                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci, animi? Hic dignissimos laboriosam est molestiae dolore voluptatum iusto.
+                    </p>
+
+                  </div>
+                </div>
+
+                
+                
+              </div>
+            </div>
+
+          </div>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endfor %}
+
+
+{% for i in soccer_place_list %}
+  <!-- Modal -->
+<div class="modal fade" id="{{ i.title|striptags|cut:" " }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 id="modal_title" class="modal-title" id="exampleModalScrollableTitle">{{ i.title }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div class="col-12 col-md-12 order-md-1">
+            
+            <!-- Image -->
+            <img src="/media/{{ i.photo }}" alt="" class="img-fluid mb-5">
+
+            <!-- Nav -->
+            <nav class="nav nav-tabs mb-5">
+              <a href="#{{ i.title|striptags|cut:" " }}itemDescription" class="nav-item nav-link active" data-toggle="tab">
+                소개                  
+              </a>
+              <a href="#{{ i.title|striptags|cut:" " }}itemShipping" class="nav-item nav-link" data-toggle="tab">
+                아무거나
+              </a>
+              <a href="#{{ i.title|striptags|cut:" " }}itemReviews" class="nav-item nav-link" data-toggle="tab">
+                Reviews
+              </a>
+            </nav>
+
+            <!-- Content -->
+            <div class="tab-content">
+              <div class="tab-pane fade show active" id="{{ i.title|striptags|cut:" " }}itemDescription">
+                
+                <p class="text-sm">
+                  주소 : {{ i.address }}
+                </p>
+
+                <p class="text-sm">
+                  설명 : {{ i.description }}
+                </p>
+
+                <p class="mb-0 text-sm">
+                  평점 : {{ i.description }}
+                </p>
+
+              </div>
+
+              <div class="tab-pane fade" id="{{ i.title|striptags|cut:" " }}itemShipping">
+                
+                <p class="text-sm">
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta iure vero labore sed recusandae perferendis iste quam suscipit asperiores quo ab, beatae perspiciatis aut numquam mollitia rem nobis aliquam voluptas.
+                </p>
+
+                <p class="text-sm">
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. In repudiandae labore amet fuga architecto qui, eos nulla quam sed soluta error exercitationem non accusamus aliquam illum minima asperiores dolores cupiditate!
+                </p>
+
+                <p class="mb-0 text-sm">
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores distinctio facere adipisci beatae nobis amet aperiam eius eaque culpa modi, quia, maiores obcaecati voluptate! Ipsam architecto asperiores, enim debitis pariatur?
+                </p>
+
+              </div>
+
+              <div class="tab-pane fade" id="{{ i.title|striptags|cut:" " }}itemReviews">
+                {% if request.user.is_active %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            {{ form.text }}
+                        </div>
+                        <button type="submit" class="btn btn-primary" name="pk" value="{{ i.pk }}">댓글 작성</button>
+                    </form>
+                {% else %}
+                    <div class="alert alert-warning">로그인된 사용자만 댓글을 작성할 수 있습니다.</div>
+                {% endif %}
+                
+                {% for comment in comments %}
+                {% if comment.place.title == i.title %}
+                <!-- Comment -->
+                <div class="row no-gutters mb-0">
+                  <div class="col-auto">
+                    
+                    <!-- Avatar -->
+                    <div class="avatar mr-3">
+                      <img src="" alt="..." class="img-cover">
+                    </div>
+
+                  </div>
+                  
+                  
+                  <div class="col">
+                    <!-- Meta -->
+                    <p class="mb-1 text-muted text-xs">
+                      by <strong class="text-body">{{ comment.author.nickname }}</strong> {{ comment.created_date }}
+                    </p>
+                    <!-- Rating -->
+                    <p class="mb-2 text-xs text-primary">
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star-half"></i>
+                    </p>
+                    
+                    <!-- Text -->
+                    <p class="mb-0 text-sm">
+                          {{ comment }}                      
+                    </p>                  
+                  </div>
+                  
+                </div>
+                {% endif %}
+                {% endfor %}
+                <!-- Comment -->
+                <div class="row no-gutters mb-4">
+                  <div class="col-auto">
+                    
+                    <!-- Avatar -->
+                    <div class="avatar mr-3">
+                      <img src="assets/img/17.jpg" alt="..." class="img-cover">
+                    </div>
+
+                  </div>
+                  <div class="col">
+                    
+                    <!-- Meta -->
+                    <p class="mb-1 text-muted text-xs">
+                      by <strong class="text-body">Judy Doe</strong> 17 minutes ago
+                    </p>
+
+                    <!-- Rating -->
+                    <p class="mb-2 text-xs text-primary">
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                    </p>
+                    
+                    <!-- Text -->
+                    <p class="mb-0 text-sm">
+                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci, animi? Hic dignissimos laboriosam est molestiae dolore voluptatum iusto.
+                    </p>
+
+                  </div>
+                </div>
+
+                
+                
+              </div>
+            </div>
+
+          </div>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endfor %}
+
+
+{% for i in foot_place_list %}
+  <!-- Modal -->
+<div class="modal fade" id="{{ i.title|striptags|cut:" " }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 id="modal_title" class="modal-title" id="exampleModalScrollableTitle">{{ i.title }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div class="col-12 col-md-12 order-md-1">
+            
+            <!-- Image -->
+            <img src="/media/{{ i.photo }}" alt="" class="img-fluid mb-5">
+
+            <!-- Nav -->
+            <nav class="nav nav-tabs mb-5">
+              <a href="#{{ i.title|striptags|cut:" " }}itemDescription" class="nav-item nav-link active" data-toggle="tab">
+                소개                  
+              </a>
+              <a href="#{{ i.title|striptags|cut:" " }}itemShipping" class="nav-item nav-link" data-toggle="tab">
+                아무거나
+              </a>
+              <a href="#{{ i.title|striptags|cut:" " }}itemReviews" class="nav-item nav-link" data-toggle="tab">
+                Reviews
+              </a>
+            </nav>
+
+            <!-- Content -->
+            <div class="tab-content">
+              <div class="tab-pane fade show active" id="{{ i.title|striptags|cut:" " }}itemDescription">
+                
+                <p class="text-sm">
+                  주소 : {{ i.address }}
+                </p>
+
+                <p class="text-sm">
+                  설명 : {{ i.description }}
+                </p>
+
+                <p class="mb-0 text-sm">
+                  평점 : {{ i.description }}
+                </p>
+
+              </div>
+
+              <div class="tab-pane fade" id="{{ i.title|striptags|cut:" " }}itemShipping">
+                
+                <p class="text-sm">
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta iure vero labore sed recusandae perferendis iste quam suscipit asperiores quo ab, beatae perspiciatis aut numquam mollitia rem nobis aliquam voluptas.
+                </p>
+
+                <p class="text-sm">
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. In repudiandae labore amet fuga architecto qui, eos nulla quam sed soluta error exercitationem non accusamus aliquam illum minima asperiores dolores cupiditate!
+                </p>
+
+                <p class="mb-0 text-sm">
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores distinctio facere adipisci beatae nobis amet aperiam eius eaque culpa modi, quia, maiores obcaecati voluptate! Ipsam architecto asperiores, enim debitis pariatur?
+                </p>
+
+              </div>
+
+              <div class="tab-pane fade" id="{{ i.title|striptags|cut:" " }}itemReviews">
+                {% if request.user.is_active %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            {{ form.text }}
+                        </div>
+                        <button type="submit" class="btn btn-primary" name="pk" value="{{ i.pk }}">댓글 작성</button>
+                    </form>
+                {% else %}
+                    <div class="alert alert-warning">로그인된 사용자만 댓글을 작성할 수 있습니다.</div>
+                {% endif %}
+                
+                {% for comment in comments %}
+                {% if comment.place.title == i.title %}
+                <!-- Comment -->
+                <div class="row no-gutters mb-0">
+                  <div class="col-auto">
+                    
+                    <!-- Avatar -->
+                    <div class="avatar mr-3">
+                      <img src="" alt="..." class="img-cover">
+                    </div>
+
+                  </div>
+                  
+                  
+                  <div class="col">
+                    <!-- Meta -->
+                    <p class="mb-1 text-muted text-xs">
+                      by <strong class="text-body">{{ comment.author.nickname }}</strong> {{ comment.created_date }}
+                    </p>
+                    <!-- Rating -->
+                    <p class="mb-2 text-xs text-primary">
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star-half"></i>
+                    </p>
+                    
+                    <!-- Text -->
+                    <p class="mb-0 text-sm">
+                          {{ comment }}                      
+                    </p>                  
+                  </div>
+                  
+                </div>
+                {% endif %}
+                {% endfor %}
+                <!-- Comment -->
+                <div class="row no-gutters mb-4">
+                  <div class="col-auto">
+                    
+                    <!-- Avatar -->
+                    <div class="avatar mr-3">
+                      <img src="assets/img/17.jpg" alt="..." class="img-cover">
+                    </div>
+
+                  </div>
+                  <div class="col">
+                    
+                    <!-- Meta -->
+                    <p class="mb-1 text-muted text-xs">
+                      by <strong class="text-body">Judy Doe</strong> 17 minutes ago
+                    </p>
+
+                    <!-- Rating -->
+                    <p class="mb-2 text-xs text-primary">
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                    </p>
+                    
+                    <!-- Text -->
+                    <p class="mb-0 text-sm">
+                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci, animi? Hic dignissimos laboriosam est molestiae dolore voluptatum iusto.
+                    </p>
+
+                  </div>
+                </div>
+
+                
+                
+              </div>
+            </div>
+
+          </div>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endfor %}
+
+
+
+
+<!--카카오맵-->
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2a2b8115c0d3424dd3fc5518f3e75cf8&libraries=services,clusterer,drawing"></script>
+<!--커스텀 js-->
+<script type="text/javascript" src="{% static 'js/sport_map_customs.js' %}"></script>
+<!--제이쿼리-->
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+
+
+<script type="text/javascript">
+  $("#place_soccer").click(function(){
+    $.ajax({ // .like 버튼을 클릭하면 <새로고침> 없이 ajax로 서버와 통신하겠다.
+      type: "POST", // 데이터를 전송하는 방법을 지정
+      url: "/sport_place_select_ajax", // 통신할 url을 지정
+      data: {'place': 'soccer', 'csrfmiddlewaretoken': '{{ csrf_token }}'}, // 서버로 데이터 전송시 옵션
+      dataType: "json", // 서버측에서 전송한 데이터를 어떤 형식의 데이터로서 해석할 것인가를 지정, 없으면 알아서 판단
+      // 서버측에서 전송한 Response 데이터 형식 (json)
+      success: function(response){ // 통신 성공시 - 동적으로 좋아요 갯수 변경, 유저 목록 변경
+        ajax_change_marker(response.place);
+      },
+      error: function(request, status, error){ // 통신 실패시 - 로그인 페이지 리다이렉트
+        alert("ajax통신이 실패했습니다.")
+        //window.location.replace("/accounts/login/")
+        //  alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+      },
+    });
+  })
+
+  $("#place_basket").click(function(){
+    $.ajax({ // .like 버튼을 클릭하면 <새로고침> 없이 ajax로 서버와 통신하겠다.
+      type: "POST", // 데이터를 전송하는 방법을 지정
+      url: "/sport_place_select_ajax", // 통신할 url을 지정
+      data: {'place': 'basket', 'csrfmiddlewaretoken': '{{ csrf_token }}'}, // 서버로 데이터 전송시 옵션
+      dataType: "json", // 서버측에서 전송한 데이터를 어떤 형식의 데이터로서 해석할 것인가를 지정, 없으면 알아서 판단
+      // 서버측에서 전송한 Response 데이터 형식 (json)
+      success: function(response){ // 통신 성공시 - 동적으로 좋아요 갯수 변경, 유저 목록 변경
+        ajax_change_marker(response.place);
+      },
+      error: function(request, status, error){ // 통신 실패시 - 로그인 페이지 리다이렉트
+        alert("ajax통신이 실패했습니다.")
+        //window.location.replace("/accounts/login/")
+        //  alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+      },
+    });
+  })
+
+  $("#place_foot").click(function(){
+    $.ajax({ // .like 버튼을 클릭하면 <새로고침> 없이 ajax로 서버와 통신하겠다.
+      type: "POST", // 데이터를 전송하는 방법을 지정
+      url: "/sport_place_select_ajax", // 통신할 url을 지정
+      data: {'place': 'foot', 'csrfmiddlewaretoken': '{{ csrf_token }}'}, // 서버로 데이터 전송시 옵션
+      dataType: "json", // 서버측에서 전송한 데이터를 어떤 형식의 데이터로서 해석할 것인가를 지정, 없으면 알아서 판단
+      // 서버측에서 전송한 Response 데이터 형식 (json)
+      success: function(response){ // 통신 성공시 - 동적으로 좋아요 갯수 변경, 유저 목록 변경
+        ajax_change_marker(response.place);
+      },
+      error: function(request, status, error){ // 통신 실패시 - 로그인 페이지 리다이렉트
+        alert("ajax통신이 실패했습니다.")
+        //window.location.replace("/accounts/login/")
+        //  alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+      },
+    });
+  })
+</script>
+
+
+{% endblock %}

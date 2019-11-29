@@ -1,0 +1,586 @@
+
+{% load static %}
+
+
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Plugins CSS -->
+    <link rel="stylesheet" href="{% static 'libs/flickity/dist/flickity.min.css' %}">
+    <link rel="stylesheet" href="{% static 'libs/flickity-fade/flickity-fade.css' %}">
+    <link rel="stylesheet" href="{% static 'libs/fullpage.js/dist/fullpage.min.css' %}">
+    <link rel="stylesheet" href="{% static 'libs/highlightjs/styles/codepen-embed.css' %}">
+    <link rel="stylesheet" href="{% static 'libs/@fortawesome/fontawesome-free/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'libs/incline-icons/style.min.css' %}">
+
+    <!-- Theme CSS -->
+    
+    <link rel="stylesheet" href="{% static 'css/theme.min.css' %}">
+    <style type="text/css">
+      	.progress-circle {
+		  height: 15.625rem;
+		  position: relative;
+		  font-family: Lato, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+		}
+		
+		.progress-circle .progressbar-text {
+		  text-align: center;
+		  color: #1c1c1c !important;
+		  margin-bottom: 0;
+		  line-height: 1;
+		}
+		
+		.progress-circle .progressbar-text span {
+		  font-size: 1rem;
+		  display: block;
+		}
+		
+		.progress-circle .progressbar-text .value {
+		  font-weight: 900;
+		  font-size: 4.199rem;
+		}
+		
+		.progress-circle .progressbar-text b {
+		  font-size: 3.157rem;
+		  font-weight: 900;
+		}
+		
+		.progress-circle svg {
+		  height: 100%;
+		  display: block;
+		}
+    </style>
+    
+    <title>W i t u s</title>
+
+
+
+  </head>
+  <body>
+  	<!-- NAVBAR
+    ================================================= -->
+    <nav class="navbar navbar-expand-xl navbar-light  fixed-top">
+      <div class="container">
+
+        <!-- Brand -->
+        <a class="navbar-brand" href="{% url 'main' %}">
+          <svg class="navbar-brand-svg" viewBox="0 0 245 80" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <path d="M0 0 L 20 10 L 0 20 Z" class="navbar-brand-svg-i" fill="currentColor"></path>
+            <path d="M0 30 L 20 40 L 0 50 Z M20 45 L 0 55 L 20 65 Z M0 60 L 20 70 L 0 80 Z" fill="currentColor"></path>
+            <text x="40" y="70" font-family="Arial, sans-serif" font-size="60" font-weight="bold" letter-spacing="-.025em" fill="currentColor">Witus</text>
+          </svg>
+        </a>
+  
+        <!-- Toggler -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+  
+        <!-- Collapse -->
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+
+          <!-- Social -->
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item-divider">
+              <span class="nav-link">
+                <span></span>
+              </span>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="fas fa-comment-dots"></i>
+                <span class="d-xl-none ml-2">
+                  kakao
+                </span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="fab fa-twitter"></i> 
+                <span class="d-xl-none ml-2">
+                  Twitter
+                </span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="fab fa-instagram"></i> 
+                <span class="d-xl-none ml-2">
+                  Instagram
+                </span>
+              </a>
+            </li>
+          </ul>
+
+          <!-- Links -->
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item ">
+              <a href="{% url 'main' %}" class="nav-link">
+                home
+              </a>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarLandings" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                team
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarLandings">
+                <a class="dropdown-item " href="app.html">
+                  축구
+                </a>
+                <a class="dropdown-item  active " href="{% url 'team_post' %}">
+                  농구
+                </a>
+                <a class="dropdown-item " href="fullpage.html">
+                  족구
+                </a>
+              </div>
+            </li>
+
+            <li class="nav-item ">
+              <a href="{% url 'sportmap' %}" class="nav-link">
+                sport map
+              </a>
+            </li>
+
+            <!-- 비로그인시 -->
+            {% if not user.is_authenticated %}
+            <li class="nav-item ">
+              <a href="{% url 'signin' %}" class="nav-link">
+                sign in
+              </a>
+            </li>
+            
+            <li class="nav-item">
+              <a href="{% url 'signup' %}" class="nav-link">
+                sign up
+              </a>
+            </li>
+            <!--로그인시-->
+            {% else %}
+            <li class="nav-item ">
+              <a href="{% url 'my_page' %}" class="nav-link">
+                my page
+              </a>
+            </li>
+
+            <li class="nav-item ">
+              <a href="{% url 'my_page_shinchung' %}" class="nav-link">
+                calendar
+              </a>
+            </li>
+            
+            <li class="nav-item">
+              <a href="{% url 'logout' %}" class="nav-link">
+                log out
+              </a>
+            </li>
+            {% endif %}
+            
+          </ul>
+
+        </div> <!-- / .navbar-collapse -->
+  
+      </div> <!-- / .container -->    
+    </nav>
+    
+    <section class="section bg-light">
+
+      <!-- Triangle -->
+      <div class="bg-triangle bg-triangle-dark bg-triangle-top bg-triangle-left"></div>
+      <div class="bg-triangle bg-triangle-dark bg-triangle-bottom bg-triangle-right"></div>
+
+      <!-- Content -->
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-8 col-lg-6">
+            
+            <!-- Heading -->
+            <h2 class="text-center mb-4">
+              Information
+            </h2>
+
+            <!-- Subheading -->
+            <p class="text-muted text-center mb-5">
+              본인의 정보는 본인이 관리하세요
+            </p>
+
+          </div>
+        </div> <!-- / .row -->
+        <div class="row align-items-center">
+          <div class="col-md-4 col-lg-3">
+
+            <!-- Item -->
+            <div class="mb-5">
+              
+              <!-- Icon -->
+              <div class="text-primary mb-4">
+                <span class="icon icon-shield icon-2x"></span>
+              </div>
+              <!-- Heading -->
+              <h4 class="mb-3">
+                ID
+              </h4>
+
+              <!-- Content -->
+              <p class="text-muted mb-0">
+                {{author.user_id}}
+              </p>
+
+            </div>
+
+            <!-- Item -->
+            <div class="mb-5">
+              
+              <!-- Icon -->
+              <div class="text-primary mb-4">
+                <span class="icon icon-person icon-2x"></span>
+              </div>
+
+              <!-- Heading -->
+              <h4 class="mb-3">
+                NickName
+              </h4>
+
+              <!-- Content -->
+              <p class="text-muted mb-0">
+                {{author.nickname}}
+              </p>
+
+            </div>
+
+            <!-- Item -->
+            <div class="mb-5 mb-md-0">
+              
+              <!-- Icon -->
+              <div class="text-primary mb-4">
+                <span class="icon icon-home icon-2x"></span>
+              </div>
+
+              <!-- Heading -->
+              <h4 class="mb-3">
+                Area
+              </h4>
+
+              <!-- Content -->
+              <p class="text-muted mb-0">
+                {{author.address}}
+              </p>
+
+            </div>
+
+          </div>
+          <div class="col-md-4 col-lg-4 offset-lg-1">
+            
+            <!-- Image -->
+            <div class="text-center mb-5 mb-md-0">
+              <img src="media/{{ author.Photo }}" class="img-fluid mx-auto">
+              
+            </div>
+
+          </div>
+          <div class="col-md-4 col-lg-3 offset-lg-1">
+
+            <!-- Item -->
+            <div class="text-left text-md-right mb-5">
+              
+              <!-- Icon -->
+              <div class="text-primary mb-4">
+                <span class="icon icon-clock icon-2x"></span>
+              </div>
+
+              <!-- Heading -->
+              <h4 class="mb-3">
+                Birth
+              </h4>
+
+              <!-- Content -->
+              <p class="text-muted mb-0">
+                {{author.birth}}
+              </p>
+
+            </div>
+
+            <!-- Item -->
+            <div class="text-left text-md-right mb-5">
+              
+              <!-- Icon -->
+              <div class="text-primary mb-4">
+                <span class="icon icon-comment icon-2x"></span>
+              </div>
+
+              <!-- Heading -->
+              <h4 class="mb-3">
+                Kakaotalk ID
+              </h4>
+
+              <!-- Content -->
+              <p class="text-muted mb-0">
+                {{author.kakao_id}}            
+              </p>
+
+            </div>
+
+            <!-- Item -->
+            <div class="text-left text-md-right mb-5">
+              
+              <!-- Icon -->
+              <div class="text-primary mb-4">
+                <span class="icon icon-edit icon-2x"></span>
+              </div>
+
+              <!-- Heading -->
+              <h4 class="mb-3">
+                Info Change
+              </h4>
+                    <!-- 모달, modal -->
+            <!-- Button trigger modal -->
+            <button id="modal_button" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_content">정보 변경</button>
+        
+            <!-- 모달, modal -->
+            <!-- Button trigger modal -->
+            <button id="modal_button" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_password_change">비밀번호 변경</button>
+
+
+            </div>
+
+            
+          </div>
+        </div> <!-- / .row -->
+
+
+
+      </div> <!-- / .container -->
+
+    </section>
+
+
+<section class="section bg-white">
+  <!-- Triangle -->
+      <div class="bg-triangle bg-triangle-dark bg-triangle-top bg-triangle-right"></div>
+      <div class="bg-triangle bg-triangle-dark bg-triangle-bottom bg-triangle-left"></div>
+    <div class="container">
+    <div class="row justify-content-center">
+          <div class="col-md-8 col-lg-6">
+            <!-- Heading -->
+            <h2 class="text-center mb-4">
+              Sport Stack
+            </h2>
+            <!-- Subheading -->
+            <p class="text-muted text-center mb-5">
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Saepe aspernatur ullam doloremque deleniti sequi obcaecat.
+            </p>
+          </div>
+      </div> <!-- / .row -->
+      
+        <div class="row align-items-center mt-6 col-md-12">
+            <div class="col-md-4">
+              <div class="progress-circle mb-4" data-options='{"progress":{{ basket_total_level }},"text":"<span class=&#39;text-700 pt-2&#39;>Basketball<br/>Level</span>"}'></div>
+            </div>
+            <div class="col-md-8 pl-md-7 text-left mt-4 mt-md-0">
+              <div class="progress-line mr-4" data-options='{"progress":{{ author.user_of.basket_pass_level }},"text":"Pass"}'></div>
+              <div class="progress-line mr-4 mt-4" data-options='{"progress":{{ author.user_of.basket_shoot_level }},"text":"Shoot"}'></div>
+              <div class="progress-line mr-4 mt-4" data-options='{"progress":{{ author.user_of.basket_dribble_level }},"text":"Dribble"}'></div>
+              <div class="progress-line mr-4 mt-4" data-options='{"progress":{{ author.user_of.basket_defense_level }},"text":"Defense"}'></div>
+            </div>
+        </div>
+    </div>
+
+
+
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+	<!-- FOOTER
+    ================================================== -->
+    <footer class="section bg-dark">
+
+      <!-- Triangles -->
+      <div class="bg-triangle bg-triangle-light bg-triangle-bottom bg-triangle-left"></div>
+      <div class="bg-triangle bg-triangle-light bg-triangle-bottom bg-triangle-right"></div>
+
+      <!--Content -->
+      <div class="container">
+        <div class="row align-self-center">
+          <div class="col-md-auto">
+
+            <!-- Brand -->
+            <p>
+              <a href="#" class="footer-brand text-white">
+                <svg class="footer-brand-svg" viewBox="0 0 235 80" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <path d="M0 0 L 20 10 L 0 20 Z" class="text-primary" fill="currentColor"></path>
+                  <path d="M0 30 L 20 40 L 0 50 Z M20 45 L 0 55 L 20 65 Z M0 60 L 20 70 L 0 80 Z" fill="currentColor"></path>
+                  <text x="40" y="70" font-family="Arial, sans-serif" font-size="60" font-weight="bold" letter-spacing="-.025em" fill="currentColor">incline.</text>
+                </svg>
+              </a>
+            </p>
+        
+          </div>
+          <div class="col-md">
+        
+            <!-- Links -->
+            <ul class="list-unstyled list-inline text-md-right">
+              <li class="list-inline-item mr-2">
+                <a href="#" class="text-white">
+                  Terms and conditions
+                </a>
+              </li>
+              <li class="list-inline-item mr-2">
+                <a href="#" class="text-white">
+                  Privacy policy
+                </a>
+              </li>
+              <li class="list-inline-item">
+                <a href="#" class="text-white">
+                  Contact us
+                </a>
+              </li>
+            </ul>
+
+          </div>
+        </div> <!-- / .row -->
+        <div class="row align-items-center">
+          <div class="col-md">
+        
+            <!-- Copyright -->
+            <p class="text-white text-muted">
+              <small>
+                &copy; Copyright <span class="current-year"></span> Simpleqode. All rights reserved.
+              </small>
+            </p>
+
+          </div>
+          <div class="col-md">
+        
+            <!-- Social links -->
+            <ul class="list-inline list-unstyled text-md-right">
+              <li class="list-inline-item">
+                <a href="#">
+                  <i class="fab fa-github"></i>
+                </a>
+              </li>
+              <li class="list-inline-item ml-3">
+                <a href="#">
+                  <i class="fab fa-twitter"></i>
+                </a>
+              </li>
+              <li class="list-inline-item ml-3">
+                <a href="#">
+                  <i class="fab fa-instagram"></i>
+                </a>
+              </li>
+            </ul>
+
+          </div>
+        </div> <!-- / .row -->
+      </div> <!-- / .container -->
+
+    </footer>
+
+<!--모달 내용-->
+<div class="modal fade" id="modal_content" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="" method="post" class="form-styled bg-white" enctype='multipart/form-data'>
+        {% csrf_token %}
+        {{ user_change_form }}
+
+         <div class="col-md">
+                  <!-- Button -->
+                  <div class="text-center text-md-right">
+                    <button type="submit" class="btn btn-outline-primary" name="info_change" value="info_change">
+                      변경하기
+                    </button>
+                  </div>
+                </div>
+
+        </form>        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--모달 내용-->
+<div class="modal fade" id="modal_password_change" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" action="" class="form-styled bg-white">
+                {% csrf_token %}
+
+                <div class="login_input_container">
+                    <div class="username_form_text">Origin Password</div>
+                    <div class="input_container">
+                        <input class="form-control order-1" name="origin_password" type="password">
+                    </div>
+
+                    <div class="password_form_text"> New Password</div>
+                    <div class="input_container">
+                        <input class="form-control order-1" name="password1" type="password">
+                    </div>
+                    <div class="confirm_password_form_text">Confirm Password</div>
+                    <div class="input_container">
+                        <input class="form-control order-1" name="password2" type="password">
+                    </div>
+                </div>
+                <div class="text-center text-md-right">
+                  <input type="submit" class="btn btn-outline-primary" name="info_change" value="password_change">
+                </div>
+          </form>    
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+  </body>
+
+<!-- JAVASCRIPT
+================================================== -->
+<!-- Global JS -->
+<script src="{% static 'libs/jquery/dist/jquery.min.js' %}"></script>
+    
+
+<!-- Plugins JS -->
+<script src="{% static 'libs/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'libs/fullpage.js/dist/fullpage.min.js' %}"></script>
+<script src="{% static 'libs/jquery/dist/jquery.min.js' %}"></script>
+<script src="{% static 'js/plugins.js' %}"></script>
+<script src="{% static 'js/progressbar.min.js' %}"></script>
+<script src="{% static 'js/theme.js' %}"></script>

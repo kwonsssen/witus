@@ -1,0 +1,421 @@
+{% extends 'first/base.html' %}
+{% load static %}
+
+{% block head %}
+  <style type="text/css">
+    .height_short{
+      line-height: 50%;
+    }
+  </style>  
+{% endblock %}
+{% block nav %}
+    <!-- NAVBAR
+    ================================================= -->
+  <nav class="navbar navbar-expand-xl navbar-dark  navbar-togglable  fixed-top">
+{% endblock %}
+
+{% block content %}
+
+    <!-- HERO
+    ================================================== -->
+    <section class="section section-top section-full">
+
+      <!-- Cover -->
+      <div class="bg-cover" style="background-image: url({% static 'img/main_img.jpg' %})"></div>
+
+      <!-- Overlay -->
+      <div class="bg-overlay"></div>
+
+      <!-- Triangles -->
+      <div class="bg-triangle bg-triangle-light bg-triangle-bottom bg-triangle-left"></div>
+      <div class="bg-triangle bg-triangle-light bg-triangle-bottom bg-triangle-right"></div>
+
+      <!-- Content -->
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8 col-lg-5 align-self-end">
+
+            <!-- Preheading -->
+            <p class="font-weight-medium text-xs text-uppercase text-white text-muted" data-toggle="animation" data-animation="fadeUp" data-animation-order="0" data-animation-trigger="load">
+              by witus
+            </p>
+            
+            <!-- Heading -->
+            <h1 class="text-white mb-4" data-toggle="animation" data-animation="fadeUp" data-animation-order="1" data-animation-trigger="load">
+              If you with 'WITUS' then you will Best
+            </h1>
+
+            <!-- Subheading -->
+            <p class="text-white text-muted mb-5" data-toggle="animation" data-animation="fadeUp" data-animation-order="2" data-animation-trigger="load">
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veritatis provident et ab, ullam in quidem nostrum quo sunt beatae odio fugit.
+            </p>
+
+            <!-- Button -->
+            <div class="mb-5 mb-md-0" data-toggle="animation" data-animation="fadeUp" data-animation-order="3" data-animation-trigger="load">
+              <a href="contact.html" target="_blank" class="btn btn-outline-primary text-white">
+                Schedule a showing
+              </a>
+            </div>
+
+          </div>
+          <div class="col-md-4 col-lg-7 align-self-center d-flex justify-content-end">
+            
+            <!-- Heading -->
+            <h4 class="text-vertical text-white mb-0">
+              <span>Incline real estate</span>
+            </h4>
+
+          </div>
+        </div> <!-- / .row -->
+      </div> <!-- / .container -->
+
+    </section>
+
+
+    <!-- TESTIMONIALS
+    ================================================== -->
+    <section class="section" id="testimonials">
+      
+      <!-- Content -->
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-8 col-lg-6">
+            
+            <!-- Heading -->
+            <h2 class="mb-4 text-center">
+              급구내역
+            </h2>
+
+            <!-- Subheading -->
+            <p class="text-center text-muted mb-5">
+              본인의 지역의 모임 내역을 한눈에 확인해 보세요
+            </p>
+
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            
+            <!-- Slider -->
+            <div class="testimonial-slider">
+              {% for i in fast_team_list %}
+              <!-- Item -->
+              <div class="testimonial-slider-item">
+                <div class="testimonial-slider-item-inner">
+                
+                  <!-- Quote -->
+                  <div class="">
+                    <blockquote class="quote-blockquote">
+                      <span class="icon icon-tick"></span>
+                      <p class="quote-blockquote-content">
+                        <a href="{% url 'team_post_detail' pk=i.pk %}">상세페이지</a>
+                        <p class="height_short">팀명 : {{ i.basket_team_name }}</p>
+                        <p class="height_short">지역 : {{ i.area }} {{ i.area_detail }}</p>
+                        <p class="height_short">일시 : {{ i.date_time }}</p>
+                        <p class="height_short">경기장 : {{ i.place.title }}</p>
+                        <p class="height_short">인원 : {{ i.people_count }} / {{ i.max_people }}</p>
+                      </p>
+                      <footer class="quote-blockquote-footer">
+                        <div class="avatar avatar-lg mr-3">
+                          <img src="media/{{i.manager.user_of.user.Photo}}" alt="..." class="img-cover rounded-circle">
+                        </div>
+                        <span>
+                          팀장. <span class="text-zigzag">{{ i.manager }}</span>
+                        </span>
+                      </footer>
+                    </blockquote>
+                  </div>
+
+                </div>
+              </div>
+              <!-- Item -->
+              {% endfor %}
+
+              
+              <div class="testimonial-slider-item">
+                <div class="testimonial-slider-item-inner">
+                
+                  <!-- Quote -->
+                  <div class="">
+                    <blockquote class="quote-blockquote">
+                      <span class="icon icon-tick"></span>
+                      <p class="quote-blockquote-content">
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam exercitationem nobis incidunt alias ipsa quis, rerum doloribus nostrum, recusandae. Laboriosam, quasi, dolores! Itaque nihil quae, omnis, minus nisi iste iure.
+                      </p>
+                      <footer class="quote-blockquote-footer">
+                        <div class="avatar avatar-lg mr-3">
+                          <img src="assets/img/16.jpg" alt="..." class="img-cover rounded-circle">
+                        </div>
+                        <span>
+                          John Doe, <span class="text-zigzag">Chicago</span>
+                        </span>
+                      </footer>
+                    </blockquote>
+                  </div>
+
+                </div>
+              </div>
+
+              <!-- Item -->
+              <div class="testimonial-slider-item">
+                <div class="testimonial-slider-item-inner">
+                
+                  <!-- Quote -->
+                  <div class="">
+                    <blockquote class="quote-blockquote">
+                      <span class="icon icon-tick"></span>
+                      <p class="quote-blockquote-content">
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam exercitationem nobis incidunt alias ipsa quis, rerum doloribus nostrum, recusandae. Laboriosam, quasi, dolores! Itaque nihil quae, omnis, minus nisi iste iure.
+                      </p>
+                      <footer class="quote-blockquote-footer">
+                        <div class="avatar avatar-lg mr-3">
+                          <img src="assets/img/16.jpg" alt="..." class="img-cover rounded-circle">
+                        </div>
+                        <span>
+                          John Doe, <span class="text-zigzag">Chicago</span>
+                        </span>
+                      </footer>
+                    </blockquote>
+                  </div>
+
+                </div>
+              </div>
+
+            </div> <!-- / .testimonials-slider -->
+
+          </div>
+        </div> <!-- / .row -->
+      </div> <!-- / .container -->
+
+    </section>
+    
+    <!-- HEADER
+    ================================================== -->
+    <section class="section pb-0">
+
+      <!-- Content -->
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            
+            <!-- Header -->
+            <div class="header bg-cover" style="background-image: url({% static 'img/15.jpg' %})"></div>
+
+          </div>
+        </div> <!-- / .row -->
+      </div> <!-- / .container -->
+
+    </section>
+
+    <!-- ABOUT
+    ================================================== -->
+    <section class="section pb-0">
+
+      <!-- Content -->
+      <div class="container">
+        <div class="row">
+          <div class="col-md-2">
+            
+            <!-- Title -->
+            <h6 class="title">
+              About Witus
+            </h6>
+
+          </div>
+          <div class="col-md-5">
+            
+            <!-- Heading -->
+            <h3 class="mb-4">
+              About witus...
+            </h3>
+
+            <!-- Content -->
+            <blockquote class="blockquote">
+              <p class="mb-0">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos excepturi, eveniet, accusamus magnam unde mollitia facere similique corrupti veniam odit.
+              </p>
+            </blockquote>
+            <p class="text-muted">
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maiores repellat, consectetur eligendi necessitatibus reiciendis reprehenderit porro expedita consequuntur vitae dolorem beatae commodi adipisci cupiditate qui quisquam blanditiis praesentium labore enim.
+            </p>
+
+          </div>
+          <div class="col-md-5">
+            
+            <!-- Content -->
+            <p class="text-muted">
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Earum vero corrupti voluptates, aperiam est asperiores, ea odio, maxime eos corporis ut magni.
+            </p>
+            <p class="text-muted">
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reprehenderit dolor debitis soluta, excepturi, laboriosam dolorum non, beatae veniam ipsa eum ad quia expedita minus explicabo placeat itaque voluptate, quos culpa!
+            </p>
+            <p class="text-muted">
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corrupti laboriosam sit natus totam libero at accusantium excepturi doloremque quae, vitae dignissimos soluta quod nesciunt, provident adipisci quas inventore odit impedit!
+            </p>
+
+          </div>
+        </div> <!-- / .row -->
+      </div> <!-- / .container -->
+
+    </section>
+
+    <!-- TEAM
+    ================================================== -->
+    <section class="section pb-0">
+      
+      <!-- Content -->
+      <div class="container">
+        <div class="row">
+          <div class="col-md-2">
+            
+            <!-- Title -->
+            <h6 class="title">
+              Our team
+            </h6>
+
+          </div>
+          <div class="col-md-10">
+            
+            <!-- Heading -->
+            <h3 class="mb-4">
+              People behind the scenes
+            </h3>
+
+            <!-- Subheading -->
+            <p class="text-muted mb-5">
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vel distinctio deserunt dolor culpa repellat iusto nostrum tempora placeat fuga facere mollitia adipisci, animi, reiciendis dicta quam obcaecati ad quibusdam eius?
+            </p>
+
+            <!-- Team -->
+            <div class="row">
+              <div class="col-md-4">
+                
+                <!-- Card -->
+                <div class="card card-sm border-0 mb-3 mb-md-0">
+                  
+                  <!-- Image -->
+                  <img src="static/img/basic_image.png" alt="..." class="card-img-top img-cover rounded-circle"">
+
+                  <!-- Body -->
+                  <div class="card-body">
+                    
+                    <!-- Title -->
+                    <h5 class="card-title">
+                      Richard Roe, <small class="text-muted">Creative Director</small>
+                    </h5>
+
+                    <!-- Text -->
+                    <ul class="card-text list-inline list-unstyled">
+                      <li class="list-inline-item">
+                        <a href="#">
+                          <i class="fab fa-github"></i>
+                        </a>
+                      </li>
+                      <li class="list-inline-item ml-3">
+                        <a href="#">
+                          <i class="fab fa-twitter"></i>
+                        </a>
+                      </li>
+                      <li class="list-inline-item ml-3">
+                        <a href="#">
+                          <i class="fab fa-instagram"></i>
+                        </a>
+                      </li>
+                    </ul>
+
+                  </div>
+
+                </div> <!-- / .card -->
+
+              </div>
+              <div class="col-md-4">
+                
+                <!-- Card -->
+                <div class="card card-sm border-0 mb-3 mb-md-0">
+                  
+                  <!-- Image -->
+                  <img src="static/img/basic_image.png" alt="..." class="card-img-top img-cover rounded-circle"">
+
+                  <!-- Body -->
+                  <div class="card-body">
+                    
+                    <!-- Title -->
+                    <h5 class="card-title">
+                      Ann Doe, <small class="text-muted">Designer</small>
+                    </h5>
+
+                    <!-- Text -->
+                    <ul class="card-text list-inline list-unstyled">
+                      <li class="list-inline-item">
+                        <a href="#">
+                          <i class="fab fa-github"></i>
+                        </a>
+                      </li>
+                      <li class="list-inline-item ml-3">
+                        <a href="#">
+                          <i class="fab fa-twitter"></i>
+                        </a>
+                      </li>
+                      <li class="list-inline-item ml-3">
+                        <a href="#">
+                          <i class="fab fa-instagram"></i>
+                        </a>
+                      </li>
+                    </ul>
+
+                  </div>
+
+                </div> <!-- / .card -->
+
+              </div>
+              <div class="col-md-4">
+                
+                <!-- Card -->
+                <div class="card card-sm border-0 mb-3 mb-md-0">
+                  
+                  <!-- Image -->
+                  <img src="static/img/basic_image.png" alt="..." class="card-img-top img-cover rounded-circle"">
+
+                  <!-- Body -->
+                  <div class="card-body">
+                    
+                    <!-- Title -->
+                    <h5 class="card-title">
+                      Jane Doe, <small class="text-muted">Copywriter</small>
+                    </h5>
+
+                    <!-- Text -->
+                    <ul class="card-text list-inline list-unstyled">
+                      <li class="list-inline-item">
+                        <a href="#">
+                          <i class="fab fa-github"></i>
+                        </a>
+                      </li>
+                      <li class="list-inline-item ml-3">
+                        <a href="#">
+                          <i class="fab fa-twitter"></i>
+                        </a>
+                      </li>
+                      <li class="list-inline-item ml-3">
+                        <a href="#">
+                          <i class="fab fa-instagram"></i>
+                        </a>
+                      </li>
+                    </ul>
+
+                  </div>
+
+                </div> <!-- / .card -->
+
+              </div>
+            </div> <!-- / .row -->
+
+          </div>
+        </div> <!-- / .row -->
+      </div> <!-- / .container -->
+
+    </section>
+
+    
+
+{% endblock %}
